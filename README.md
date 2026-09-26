@@ -1,16 +1,16 @@
-# legal\_scholarship\_mcp
+# legal_scholarship_mcp
 
 An **MCP (Model Context Protocol) server** that lets an AI assistant search scholarly literature — useful for legal and academic research — through the [OpenAlex](https://openalex.org) database of 250M+ works. It exposes **five read-only tools** that a client such as Claude Desktop can call directly.
 
-> \*\*Personal proof-of-concept, in active development.\*\* It returns scholarly \*\*metadata and abstracts\*\* — not full-text articles — and it does not give legal advice. The tools below work; more are planned (see Status).
+> **Personal proof-of-concept, in active development.** It returns scholarly **metadata and abstracts** — not full-text articles — and it does not give legal advice. The tools below work; more are planned (see Status).
 
 ## What it does
 
-* **`search\_scholarship`** — full-text search of works by query, with year filters and sort by relevance / citations / date. Returns title, authors, year, venue, citation count, OpenAlex ID and DOI.
-* **`get\_work\_details`** — fetch one work's full record by OpenAlex ID or DOI, including a plain-text abstract reconstructed from OpenAlex's inverted index, and its reference count.
-* **`find\_citing\_works`** — the citation-graph workhorse: given a work's ID, find the works that **cite** it (forward citations), newest or most-cited first.
-* **`search\_authors`** — resolve an author **name to OpenAlex author profiles** (ID, institution, works count, citations, h-index). Names are ambiguous, so this implements OpenAlex's recommended "resolve to an ID first" pattern.
-* **`get\_author\_works`** — given an author **ID** (from `search\_authors`), list that author's works.
+* **`search_scholarship`** — full-text search of works by query, with year filters and sort by relevance / citations / date. Returns title, authors, year, venue, citation count, OpenAlex ID and DOI.
+* **`get_work_details`** — fetch one work's full record by OpenAlex ID or DOI, including a plain-text abstract reconstructed from OpenAlex's inverted index, and its reference count.
+* **`find_citing_works`** — the citation-graph workhorse: given a work's ID, find the works that **cite** it (forward citations), newest or most-cited first.
+* **`search_authors`** — resolve an author **name to OpenAlex author profiles** (ID, institution, works count, citations, h-index). Names are ambiguous, so this implements OpenAlex's recommended "resolve to an ID first" pattern.
+* **`get_author_works`** — given an author **ID** (from `search_authors`), list that author's works.
 
 Every tool returns either readable **Markdown** or structured **JSON**, and all are read-only.
 
@@ -34,28 +34,28 @@ Since **13 February 2026, OpenAlex requires a free API key** for all requests (t
 3. Set it in your environment:
 
 ```bash
-export OPENALEX\_API\_KEY="your-free-key"
+export OPENALEX_API_KEY="your-free-key"
 ```
 
-A free key gives **$1 of usage per day** — ample for interactive research. The key is sent as the `api\_key` query parameter on each request.
+A free key gives **$1 of usage per day** — ample for interactive research. The key is sent as the `api_key` query parameter on each request.
 
 ## Run it
 
 **Inspect the tools with the MCP Inspector:**
 
 ```bash
-mcp dev legal\_scholarship\_mcp.py
+mcp dev legal_scholarship_mcp.py
 ```
 
-**Connect it to Claude Desktop** — add this to your `claude\_desktop\_config.json` (Settings → Developer → Edit Config), using the absolute path to the file:
+**Connect it to Claude Desktop** — add this to your `claude_desktop_config.json` (Settings → Developer → Edit Config), using the absolute path to the file:
 
 ```json
 {
   "mcpServers": {
     "legal-scholarship": {
       "command": "python",
-      "args": \["/absolute/path/to/legal\_scholarship\_mcp.py"],
-      "env": { "OPENALEX\_API\_KEY": "your-free-key" }
+      "args": ["/absolute/path/to/legal_scholarship_mcp.py"],
+      "env": { "OPENALEX_API_KEY": "your-free-key" }
     }
   }
 }
@@ -74,9 +74,9 @@ pip install pytest
 pytest
 ```
 
-The suite runs **fully offline**: the deterministic helpers are tested directly, the tools are tested with the network call replaced by a fake, and the retry logic is tested with httpx's `MockTransport`. No API key or network access is needed. (One test is a regression guard ensuring the pagination parameter stays `per\_page`, OpenAlex's required spelling.)
+The suite runs **fully offline**: the deterministic helpers are tested directly, the tools are tested with the network call replaced by a fake, and the retry logic is tested with httpx's `MockTransport`. No API key or network access is needed. (One test is a regression guard ensuring the pagination parameter stays `per_page`, OpenAlex's required spelling.)
 
-## Status \& roadmap
+## Status & roadmap
 
 **Working now:** the five read-only tools above, with input validation, retries, and Markdown/JSON output.
 
@@ -98,5 +98,5 @@ MIT — see [LICENSE](LICENSE).
 
 ## About
 
-Built by **Mahmoud Hussein**, an Egypt-qualified lawyer (registered at Appeal level), through AI-assisted development — directing and assembling AI-generated code on a foundation of Python, with the design and the OpenAlex API verification his own. This server is an actively-developed work in progress.
+Built by **[Mahmoud Hussein](https://legal-technology.uk)**, a lawyer qualified in Egypt (admitted to the Egyptian Bar and registered at Appeal level) and based in the UK, through AI-assisted development — directing and assembling AI-generated code on a foundation of Python, with the design and the OpenAlex API verification his own. This server is an actively-developed work in progress.
 
